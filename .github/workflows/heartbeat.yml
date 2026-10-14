@@ -1,0 +1,23 @@
+name: Heartbeat Supabase
+
+# Evita que o Supabase (plano free) pause o projeto por 7 dias de inatividade.
+# Roda todo dia as 12:00 UTC e pode ser disparado manualmente (workflow_dispatch).
+
+on:
+  schedule:
+    - cron: "0 12 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend DrNutri
+        run: |
+          URL="https://gcqgbtaraiewbayhkvum.supabase.co/functions/v1/drnutri-subscribe/api/subscribe/status?email=heartbeat@drnutri.app"
+          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "$URL")
+          echo "Resposta do backend: HTTP $code"
+          if [ "$code" != "200" ]; then
+            echo "FALHOU — backend nao respondeu"
+            exit 1
+          fi
