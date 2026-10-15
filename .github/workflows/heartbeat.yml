@@ -6,7 +6,8 @@ name: Heartbeat Supabase + Discover
 
 on:
   schedule:
-    - cron: "0 12 * * *"
+    - cron: "0 11 * * *"   # 08:00 Brasilia — ciencia da manha
+    - cron: "0 23 * * *"   # 20:00 Brasilia — ciencia da noite
   workflow_dispatch: {}
 
 jobs:
