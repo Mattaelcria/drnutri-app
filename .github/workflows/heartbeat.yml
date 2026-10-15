@@ -1,6 +1,7 @@
-name: Heartbeat Supabase
+name: Heartbeat Supabase + Discover
 
-# Evita que o Supabase (plano free) pause o projeto por 7 dias de inatividade.
+# 1) Evita que o Supabase (plano free) pause o projeto por 7 dias de inatividade.
+# 2) Atualiza as noticias cientificas do Discover (RSS -> resumo PT por Gemini).
 # Roda todo dia as 12:00 UTC e pode ser disparado manualmente (workflow_dispatch).
 
 on:
@@ -20,4 +21,11 @@ jobs:
           if [ "$code" != "200" ]; then
             echo "FALHOU — backend nao respondeu"
             exit 1
+          fi
+      - name: Atualizar noticias do Discover
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 120 "https://gcqgbtaraiewbayhkvum.supabase.co/functions/v1/drnutri-proxy/api/news/refresh")
+          echo "Refresh de noticias: HTTP $code"
+          if [ "$code" != "200" ]; then
+            echo "ALERTA: refresh de noticias falhou (backend segue vivo)"
           fi
