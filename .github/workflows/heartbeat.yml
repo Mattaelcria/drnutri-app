@@ -6,8 +6,7 @@ name: Heartbeat Supabase + Discover
 
 on:
   schedule:
-    - cron: "0 11 * * *"   # 08:00 Brasilia — ciencia da manha
-    - cron: "0 23 * * *"   # 20:00 Brasilia — ciencia da noite
+    - cron: "0 * * * *"   # de hora em hora (ordem do General, 15/10) — a edge so gasta Gemini se houver item NOVO
   workflow_dispatch: {}
 
 jobs:
