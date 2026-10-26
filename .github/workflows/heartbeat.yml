@@ -15,9 +15,14 @@ jobs:
     steps:
       - name: Ping backend DrNutri
         run: |
-          URL="https://gcqgbtaraiewbayhkvum.supabase.co/functions/v1/drnutri-subscribe/api/subscribe/status?email=heartbeat@drnutri.app"
+          URL="https://gcqgbtaraiewbayhkvum.supabase.co/functions/v1/drnutri-proxy/api/health"
           code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "$URL")
           echo "Resposta do backend: HTTP $code"
+          if [ "$code" != "200" ]; then
+            echo "Tentando endpoint de inscricao no proxy..."
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "https://gcqgbtaraiewbayhkvum.supabase.co/functions/v1/drnutri-proxy/api/subscribe/status?email=heartbeat@drnutri.app")
+            echo "Resposta alternativa: HTTP $code"
+          fi
           if [ "$code" != "200" ]; then
             echo "FALHOU — backend nao respondeu"
             exit 1
